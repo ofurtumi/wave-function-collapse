@@ -1,0 +1,51 @@
+body {
+	font-family: monospace;
+	margin: 0;
+}
+
+h1, h2, h3 {
+    margin: 0;
+}
+
+main {
+	margin: 0;
+	height: 100vh;
+	width: 100vw;
+	display: grid;
+	grid-template-columns: 1fr 2fr 1fr;
+}
+
+.description,
+.linkPrison {
+	padding: 1em;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.description {
+	justify-content: flex-start;
+}
+
+.linkPrison {
+	justify-content: flex-end;
+}
+
+.links {
+    padding-inline-start: 0;
+    list-style: none;
+    display: flex;
+    gap: 1em;
+}
+
+.canvas {
+	display: flex;
+	flex-direction: column;
+gap: 1em;
+	justify-content: center;
+	align-items: center;
+}
+
+canvas {
+	box-shadow: 0em 0em 1em black;
+}
