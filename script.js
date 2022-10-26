@@ -7,12 +7,23 @@ if (window.location.hostname !== 'www.sjomli.is') {
 	document.querySelector('header').remove();
 }
 
-
 const size = 50;
 const dim = canvas.width / size;
 const num = dim * dim;
 
-const imgs = Array(5)
+// ? núllstillt í klukkuröð?? heitir það það?? up: 0, right: 1 osfr...
+// ? 4 er tómi kassinn
+// prettier-ignore
+const possibilities = [
+  [1,1,0,1],  // * 0: upp
+  [1,1,1,0],  // * 1: hægri
+  [0,1,1,1],  // * 2: niður
+  [1,0,1,1],  // * 3: vinstri
+  [0,0,0,0],  // * 4: tómt
+  [1,1,1,1]	  // * 5: fullt
+]
+
+const imgs = Array(possibilities.length)
 	.fill(0)
 	.map((p, i) => {
 		let img = new Image(size, size);
@@ -57,6 +68,7 @@ function checkNeighbors(tiles, current, offset, pos, otherPos) {
 	}
 }
 
+// async function generate () {
 window.onload = async () => {
 	let tiles = Array(num)
 		.fill(0)
@@ -67,7 +79,11 @@ window.onload = async () => {
 				x: xPos,
 				y: yPos,
 				collapsed: false,
-				available: [0, 1, 2, 3, 4],
+				available: new Array(possibilities.length)
+					.fill(0)
+					.map((val, ind) => {
+						return ind;
+					}),
 				img: NaN,
 			};
 		});
@@ -75,13 +91,15 @@ window.onload = async () => {
 	// * first tile
 
 	let firstTile = Math.floor(Math.random() * num);
-	let firstImg = Math.floor(Math.random() * imgs.length);
+	let firstImg = Math.floor(Math.random() * possibilities.length);
 
 	CAD(tiles[firstTile], firstImg);
 
 	// * keyra loop en stoppa ef ehv allt er collapsed
-	for (let u = 0; u < num; u++) {
-		let allCollapsed = true;
+	let allCollapsed = false;
+	// for (let u = 0; u < num; u++) {
+		while (!allCollapsed) {
+		allCollapsed = true;
 		// while (!allCollapsed)
 		let lengths = [[], []];
 		let lengthCount = 0;
@@ -101,19 +119,11 @@ window.onload = async () => {
 		let min = Math.min(...lengths[1]);
 		let indexMin = lengths[0][lengths[1].indexOf(min)];
 		const chosen = tiles[indexMin];
+		if (chosen === undefined) return;
 		const randImg = chosen.available[Math.floor(Math.random() * min)];
 		CAD(tiles[indexMin], randImg);
 		await new Promise((r) => setTimeout(r, 25));
 	}
 };
 
-// ? núllstillt í klukkuröð?? heitir það það?? up: 0, right: 1 osfr...
-// ? 4 er tómi kassinn
-// prettier-ignore
-const possibilities = [
-  [1,1,0,1],  // * 0: upp
-  [1,1,1,0],  // * 1: hægri
-  [0,1,1,1],  // * 2: niður
-  [1,0,1,1],  // * 3: vinstri
-  [0,0,0,0]   // * 4: tómt
-]
+// window.onload = generate();
